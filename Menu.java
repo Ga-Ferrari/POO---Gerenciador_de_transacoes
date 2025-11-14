@@ -73,8 +73,8 @@ public class Menu {
                 System.out.print("CPF: ");
                 String cpf = scanner.nextLine();
                 System.out.print("Saldo inicial (BRL): ");
-                float saldoBRL = scanner.nextFloat();
-                
+                float saldoBRL = Integer.parseInt(scanner.nextLine()) ;
+
                 // Cria a conta real e o adaptador
                 ContaCliente novaConta = new ContaCliente(nome, cpf, saldoBRL);
                 PortaPagamento adaptadorConta = new AdaptadorConta(novaConta);
