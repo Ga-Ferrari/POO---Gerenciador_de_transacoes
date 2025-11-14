@@ -10,7 +10,6 @@ public class Menu {
     private Scanner scanner;
 
     public Menu() {
-        this.contas = new ArrayList<>();
         this.gerenciador = new GerenciadorTransacoes();
         this.scanner = new Scanner(System.in);
     }
@@ -29,7 +28,7 @@ public class Menu {
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
 
-            int escolha = scanner.nextInt();
+            int escolha = (int)lerValor();
             scanner.nextLine(); // Consome a quebra de linha
 
             switch (escolha) {
@@ -60,20 +59,28 @@ public class Menu {
         System.out.println("0. Voltar ao menu");
         System.out.print("Escolha uma opção: ");
 
-        int escolha = scanner.nextInt();
-        scanner.nextLine(); // Consome a quebra de linha
+        int escolha = (int)lerValor();
 
         // Variáveis para criar a conta
         String nome;
-
+        boolean valido = false;
         switch (escolha) {
             case 1: // Conta Cliente
                 System.out.print("Nome do titular: ");
                 nome = scanner.nextLine();
-                System.out.print("CPF: ");
-                String cpf = scanner.nextLine();
+                String lida;   
+                do{
+                    System.out.print("CPF: ");
+                    lida = scanner.nextLine();
+                    valido = verificaCPF(lida);
+                    if(!valido){
+                        System.out.println("O CPF deve seguir este formato: ***.***.***-**");
+                    }
+                }
+                while(lida.length()!=14||!valido);
+                String cpf = lida;
                 System.out.print("Saldo inicial (BRL): ");
-                float saldoBRL = Integer.parseInt(scanner.nextLine()) ;
+                float saldoBRL = lerValor();
 
                 // Cria a conta real e o adaptador
                 ContaCliente novaConta = new ContaCliente(nome, cpf, saldoBRL);
@@ -85,11 +92,21 @@ public class Menu {
             case 2: // PayPal
                 System.out.print("Nome do titular: ");
                 nome = scanner.nextLine();
-                System.out.print("Email: ");
-                String email = scanner.nextLine();
+
+                do{
+                    System.out.print("Email: ");
+                    lida = scanner.nextLine();
+                    valido = (lida.contains(".com") && lida.contains("@"));
+                    if(!valido){
+                        System.out.println("Insira um e-mail válido (***@***.com)");
+                    }
+                }
+                while(!valido);
+                String email = lida;
                 System.out.print("Saldo inicial (USD): $");
-                float saldoUSD = scanner.nextFloat();
                 
+                float saldoUSD = lerValor();
+
                 // Cria a conta real e o adaptador
                 PayPal novaContaPayPal = new PayPal(nome, email, saldoUSD);
                 PortaPagamento adaptadorPayPal = new AdaptadorPayPal(novaContaPayPal);
@@ -100,10 +117,19 @@ public class Menu {
             case 3: // AliPay
                 System.out.print("Nome do titular: ");
                 nome = scanner.nextLine();
-                System.out.print("Telefone: ");
-                String telefone = scanner.nextLine();
+                do{
+                    System.out.print("Telefone: ");
+                    lida = scanner.nextLine();
+                    valido = verificaValorValido(lida);
+                    if (lida.length()!=11||!valido) {
+                        System.out.println("O numero de telefone deve possuir 11 dígitos e somente números (com DDD e sem código de país)");
+                    }
+                }
+                while(lida.length()!=11||!valido);
+                String telefone = lida;
                 System.out.print("Saldo inicial (CNY): ¥");
-                float saldoCNY = scanner.nextFloat();
+                
+                float saldoCNY = lerValor();
                 
                 // Cria a conta real e o adaptador
                 AliPay novaContaAliPay = new AliPay(nome, telefone, saldoCNY);
@@ -147,7 +173,7 @@ public class Menu {
         
         // Obter valor
         System.out.print("Digite o valor da transação (em BRL): R$");
-        float valorBRL = scanner.nextFloat();
+        float valorBRL = lerValor();
 
         // Executa a transação
         System.out.println("\n...Processando transação...");
@@ -179,6 +205,45 @@ public class Menu {
         String tipoConta = conta.getClass().getSimpleName(); 
             
             System.out.printf("%s. Tipo: %s\n", conta.pegaNome(), tipoConta);
+    }
+
+    private boolean verificaValorValido(String valor){
+        try{
+            Float.parseFloat(valor);
+            return true;
+        }
+        catch(Exception e){
+            return false;
+        }
+    }
+
+    private float lerValor(){
+        String val;
+        do{
+            val = scanner.nextLine();
+            if(!verificaValorValido(val))System.out.println("Insira um valor válido (número)!");
+            else return Float.parseFloat(val);
+        }
+        while(true);
+    }
+
+    private boolean verificaCPF(String cpf){
+        for(int i =0;i<cpf.length();i++){
+            char c = cpf.charAt(i);
+
+            if((i+1)%4==0){
+                if(i<=9){
+                    if(c !='.')return false;
+                }
+                else{
+                    if(c!='-') return false;
+                }
+            }
+            else{
+                if(!(c>='0'&&c<='9'))return false;
+            }
+        }
+        return true;
     }
 
 }

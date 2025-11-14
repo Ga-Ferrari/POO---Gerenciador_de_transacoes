@@ -24,7 +24,7 @@ public class GerenciadorTransacoes {
             System.out.printf("Enviar valor R$%.2f de %s para %s?\n",valor, contaOrigem.pegaNome(),contaDestino.pegaNome());
             System.out.println("1 - sim\n2- não");
 
-            int escolha = scan.nextInt();
+            int escolha = Integer.parseInt(String.valueOf(lerValor()));
             scan.nextLine();
             // scan.close();
             if(escolha ==2){
@@ -64,5 +64,26 @@ public class GerenciadorTransacoes {
 
     private boolean saldoSuficiente(float valor, float saldo) {
         return saldo >= valor;
+    }
+    
+    private float lerValor(){
+        String val;
+        Scanner scanner = new Scanner(System.in);
+        do{
+            val = scanner.nextLine();
+            if(!verificaValorValido(val))System.out.println("Insira um valor válido (número)!");
+            else return Integer.parseInt(val);
+        }
+        while(true);
+    }
+
+    private boolean verificaValorValido(String valor){
+        try{
+            Float.parseFloat(valor);
+            return true;
+        }
+        catch(Exception e){
+            return false;
+        }
     }
 }
