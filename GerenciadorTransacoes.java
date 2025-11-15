@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-// O Gerenciador, que só depende da interface
+// O Gerenciador
 public class GerenciadorTransacoes {
     public boolean solicitarTransacao(String chaveContaOrigem, String chaveContaDestino,List<PortaPagamento> contas, float valor) {
         Scanner scan = new Scanner(System.in);
@@ -18,7 +18,6 @@ public class GerenciadorTransacoes {
         contaDestino = contas.get(indexDestino);
 
         // 1. Verifica o saldo usando a interface
-        // (Adicionei um getSaldo() à interface para isso)
         if (saldoSuficiente(valor, contaOrigem.getSaldo())) {
             // Mostra os saldos atualizados
             System.out.printf("Enviar valor R$%.2f de %s para %s?\n",valor, contaOrigem.pegaNome(),contaDestino.pegaNome());
@@ -31,7 +30,7 @@ public class GerenciadorTransacoes {
                 return false;
             }
 
-            // 2. Executa o débito (Polimorfismo!)
+            // 2. Executa o débito
             // Não importa se é PayPal, AliPay ou ContaCliente,
             // o adaptador correto fará a tradução.
             boolean debitoOk = contaOrigem.realizaDebito(valor);
@@ -42,8 +41,8 @@ public class GerenciadorTransacoes {
                 
                 if (!creditoOk) {
                     // Ops, falhou no crédito! Precisa estornar.
-                    // Assumindo que a interface tenha um estorno
-                    // contaOrigem.realizaEstorno(valor); 
+                    contaOrigem.realizaEstorno(valor);
+
                     return false; // Falha na transação
                 }
                 return true; // Sucesso!
