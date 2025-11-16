@@ -12,6 +12,7 @@ public class Menu {
     public Menu() {
         this.gerenciador = new GerenciadorTransacoes();
         this.scanner = new Scanner(System.in);
+        this.contas = new ArrayList<>();
     }
 
     public static void main(String[] args) {
@@ -27,9 +28,7 @@ public class Menu {
             System.out.println("3. Listar Contas");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
-
             int escolha = (int)lerValor();
-            scanner.nextLine(); // Consome a quebra de linha
 
             switch (escolha) {
                 case 1:
@@ -77,7 +76,7 @@ public class Menu {
                         System.out.println("O CPF deve seguir este formato: ***.***.***-**");
                     }
                 }
-                while(lida.length()!=14||!valido);
+                while(lida.length()!=14||!valido||!chaveValida(lida));
                 String cpf = lida;
                 System.out.print("Saldo inicial (BRL): ");
                 float saldoBRL = lerValor();
@@ -85,7 +84,7 @@ public class Menu {
                 // Cria a conta real e o adaptador
                 ContaCliente novaConta = new ContaCliente(nome, cpf, saldoBRL);
                 PortaPagamento adaptadorConta = new AdaptadorConta(novaConta);
-                contas.add(adaptadorConta);
+                this.contas.add(adaptadorConta);
                 System.out.println(">>> Conta Cliente adicionada com sucesso!");
                 break;
 
@@ -101,7 +100,7 @@ public class Menu {
                         System.out.println("Insira um e-mail válido (***@***.com)");
                     }
                 }
-                while(!valido);
+                while(!valido||!chaveValida(lida));
                 String email = lida;
                 System.out.print("Saldo inicial (USD): $");
                 
@@ -125,7 +124,7 @@ public class Menu {
                         System.out.println("O numero de telefone deve possuir 11 dígitos e somente números (com DDD e sem código de país)");
                     }
                 }
-                while(lida.length()!=11||!valido);
+                while(lida.length()!=11||!valido||!chaveValida(lida));
                 String telefone = lida;
                 System.out.print("Saldo inicial (CNY): ¥");
                 
@@ -154,19 +153,15 @@ public class Menu {
             return;
         }
 
-        // // Lista as contas para o usuário escolher
-        // System.out.println("Contas disponíveis:");
-        // listarContas();
-
         // Selecionar conta de ORIGEM
         System.out.print("\nDigite a chave da conta de ORIGEM: ");
         String chaveOrigem = scanner.nextLine();
 
         System.out.print("\nDigite a chave da conta de DESTINO: ");
         String chaveDestino = scanner.nextLine();
+
         // Selecionar conta de DESTINO
-        
-        if(chaveOrigem == chaveDestino) {
+        if(chaveOrigem == chaveDestino){
             System.out.println("Erro: A conta de origem e destino não podem ser a mesma.");
             return;
         }
@@ -203,8 +198,12 @@ public class Menu {
 
     private void printConta(PortaPagamento conta){
         String tipoConta = conta.getClass().getSimpleName(); 
-            
-            System.out.printf("%s. Tipo: %s\n", conta.pegaNome(), tipoConta);
+
+        if(tipoConta.equals("AdaptadorConta"))tipoConta = "Conta Cliente";
+        else if(tipoConta.equals("AdaptadorPayPal"))tipoConta = "PayPal";
+        else if(tipoConta.equals("AdaptadorAliPay"))tipoConta = "AliPay";
+
+        System.out.printf("%s. Tipo: %s\n", conta.pegaNome(), tipoConta);
     }
 
     private boolean verificaValorValido(String valor){
@@ -242,6 +241,16 @@ public class Menu {
             else{
                 if(!(c>='0'&&c<='9'))return false;
             }
+        }
+        return true;
+    }
+
+    private boolean chaveValida(String chave){
+        for(PortaPagamento p : this.contas){
+            if(p.getChave().equals(chave)){
+                System.out.println("Já há uma conta com essa chave! Insira outra");
+                return false;    
+            }    
         }
         return true;
     }

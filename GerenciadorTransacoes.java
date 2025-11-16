@@ -23,8 +23,7 @@ public class GerenciadorTransacoes {
             System.out.printf("Enviar valor R$%.2f de %s para %s?\n",valor, contaOrigem.pegaNome(),contaDestino.pegaNome());
             System.out.println("1 - sim\n2- não");
 
-            int escolha = Integer.parseInt(String.valueOf(lerValor()));
-            scan.nextLine();
+            int escolha = (int)(lerValor());
             // scan.close();
             if(escolha ==2){
                 return false;
