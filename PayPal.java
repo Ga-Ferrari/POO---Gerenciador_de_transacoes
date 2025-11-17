@@ -13,7 +13,7 @@ public class PayPal {
     public boolean debitar(float valorUSD) {
         if (this.saldo >= valorUSD) {
             this.saldo -= valorUSD;
-            System.out.printf("Conta do PayPal de" + this.nome + ": Débito de $" + valorUSD + " USD. Saldo atual: $" + this.saldo);
+            System.out.println("Conta do PayPal de" + this.nome + ": Débito de $" + valorUSD + " USD. Saldo atual: $" + this.saldo);
             return true;
         }
         System.out.println("PayPal: Saldo insuficiente.");
