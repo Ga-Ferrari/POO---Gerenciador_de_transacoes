@@ -13,7 +13,7 @@ public class AliPay {
     public boolean debitar(float valorCNY) {
         if (this.saldo >= valorCNY) {
             this.saldo -= valorCNY;
-            System.out.println("AliPay: Débito de ¥" + valorCNY + " CNY. Saldo atual: ¥" + this.saldo);
+            System.out.println("AliPay: Debito de ¥" + valorCNY + " CNY. Saldo atual: ¥" + this.saldo);
             return true;
         }
         System.out.println("AliPay: Saldo insuficiente.");
@@ -22,7 +22,7 @@ public class AliPay {
 
     public boolean creditar(float valorCNY) {
         this.saldo += valorCNY;
-        System.out.println("AliPay: Crédito de ¥" + valorCNY + " CNY. Saldo atual: ¥" + this.saldo);
+        System.out.println("AliPay: Credito de ¥" + valorCNY + " CNY. Saldo atual: ¥" + this.saldo);
         return true;
     }
 
@@ -30,12 +30,12 @@ public class AliPay {
         return this.saldo;
     }
 
-    public String getTelefone(){
+    public String getTelefone() {
         return this.telefone;
     }
 
-    public String getNome(){
+    public String getNome() {
         return this.nome;
     }
-    
+
 }
