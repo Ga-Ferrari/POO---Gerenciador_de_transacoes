@@ -160,8 +160,8 @@ public class Menu {
         String chaveDestino = scanner.nextLine();
 
         // Selecionar conta de DESTINO
-        if (chaveOrigem == chaveDestino) {
-            System.out.println("Erro: A conta de origem e destino nao podem ser a mesma.");
+        if (chaveOrigem.equals(chaveDestino)) {
+            System.out.println("\nErro: A conta de origem e destino nao podem ser a mesma.");
             return;
         }
 
