@@ -13,7 +13,8 @@ public class PayPal {
     public boolean debitar(float valorUSD) {
         if (this.saldo >= valorUSD) {
             this.saldo -= valorUSD;
-            System.out.printf("Conta do PayPal de" + this.nome + ": Débito de $" + valorUSD + " USD. Saldo atual: $" + this.saldo);
+            System.out.println("Conta do PayPal de" + this.nome + ": Debito de $" + valorUSD + " USD. Saldo atual: $"
+                    + this.saldo);
             return true;
         }
         System.out.println("PayPal: Saldo insuficiente.");
@@ -22,7 +23,7 @@ public class PayPal {
 
     public boolean creditar(float valorUSD) {
         this.saldo += valorUSD;
-        System.out.println("PayPal: Crédito de $" + valorUSD + " USD. Saldo atual: $" + this.saldo);
+        System.out.println("PayPal: Credito de $" + valorUSD + " USD. Saldo atual: $" + this.saldo);
         return true;
     }
 
@@ -30,11 +31,11 @@ public class PayPal {
         return this.saldo;
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return this.email;
     }
-    
-    public String getNome(){
+
+    public String getNome() {
         return this.nome;
     }
 
